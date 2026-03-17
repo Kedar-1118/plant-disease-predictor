@@ -143,7 +143,14 @@ Upload a leaf image and get a detailed diagnosis.
 
 ## 🌐 Deployment
 
-### Production with Gunicorn
+### Option A: Windows (using Waitress)
+Gunicorn does not support Windows. Use `waitress` instead:
+```bash
+pip install waitress
+waitress-serve --port=5000 app:app
+```
+
+### Option B: Linux/macOS (using Gunicorn)
 ```bash
 pip install gunicorn
 gunicorn -w 2 -b 0.0.0.0:5000 app:app
