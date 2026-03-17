@@ -19,7 +19,6 @@ HOW TO RUN:
     # Train for a specific crop:
     python training/train_disease_classifier.py --crop tomato
     python training/train_disease_classifier.py --crop potato
-    python training/train_disease_classifier.py --crop rice
     python training/train_disease_classifier.py --crop corn
 
     # Train for all crops:

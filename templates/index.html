@@ -3,20 +3,18 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Plant Disease Predictor — AI Crop Health Analyzer</title>
-  <meta name="description" content="Upload a crop leaf image to instantly identify the crop type and detect diseases using AI. Get treatment and prevention recommendations." />
+  <title>Plant Disease Predictor - AI Crop Health Analyzer</title>
+  <meta name="description" content="Upload a crop leaf image to identify tomato, potato, or corn diseases with AI and get treatment recommendations." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="/static/css/style.css" />
 </head>
 <body>
-
-  <!-- ── Header ─────────────────────────────────────────────────────── -->
   <header class="header">
     <div class="header-inner">
       <div class="logo">
-        <span class="logo-icon">🌿</span>
+        <span class="logo-icon">??</span>
         <div>
           <span class="logo-title">PlantGuard AI</span>
           <span class="logo-sub">Crop Disease Detection System</span>
@@ -29,7 +27,6 @@
     </div>
   </header>
 
-  <!-- ── Hero Section ───────────────────────────────────────────────── -->
   <section class="hero">
     <div class="hero-content">
       <h1 class="hero-title">
@@ -37,17 +34,17 @@
         <span class="hero-highlight">Instantly with AI</span>
       </h1>
       <p class="hero-subtitle">
-        Upload a leaf image — our two-stage deep learning system identifies
-        the crop and diagnoses the disease with treatment recommendations.
+        Upload a leaf image and our two-stage model identifies the crop, diagnoses the disease,
+        and returns practical treatment guidance.
       </p>
       <div class="hero-stats">
         <div class="stat">
-          <span class="stat-num">4</span>
+          <span class="stat-num">3</span>
           <span class="stat-label">Crops</span>
         </div>
         <div class="stat-divider"></div>
         <div class="stat">
-          <span class="stat-num">14+</span>
+          <span class="stat-num">10+</span>
           <span class="stat-label">Diseases</span>
         </div>
         <div class="stat-divider"></div>
@@ -59,26 +56,20 @@
     </div>
   </section>
 
-  <!-- ── Main Content ────────────────────────────────────────────────── -->
   <main class="main">
     <div class="container">
-
-      <!-- Upload Card -->
       <div class="card upload-card" id="uploadCard">
         <div class="card-header">
           <h2 class="card-title">Upload Leaf Image</h2>
           <p class="card-subtitle">Supported: JPG, PNG, WEBP, BMP (max 16 MB)</p>
         </div>
 
-        <!-- Drag & Drop Zone -->
         <div class="drop-zone" id="dropZone">
           <div class="drop-zone-content" id="dropZoneContent">
-            <div class="drop-icon">📷</div>
-            <p class="drop-text">Drag &amp; drop your leaf image here</p>
+            <div class="drop-icon">??</div>
+            <p class="drop-text">Drag and drop your leaf image here</p>
             <p class="drop-subtext">or</p>
-            <label class="btn btn--primary" for="fileInput">
-              Browse Image
-            </label>
+            <label class="btn btn--primary" for="fileInput">Browse Image</label>
             <input
               type="file"
               id="fileInput"
@@ -87,39 +78,32 @@
             />
           </div>
 
-          <!-- Image Preview (hidden initially) -->
           <div class="preview-container" id="previewContainer" style="display:none;">
             <img id="previewImage" class="preview-image" alt="Uploaded leaf preview" />
             <div class="preview-overlay">
-              <button class="btn btn--outline btn--sm" id="changeImageBtn">
-                Change Image
-              </button>
+              <button class="btn btn--outline btn--sm" id="changeImageBtn">Change Image</button>
             </div>
           </div>
         </div>
 
-        <!-- Analyze Button -->
         <button class="btn btn--primary btn--full btn--lg" id="analyzeBtn" disabled>
-          <span id="analyzeBtnText">🔍 Analyze Leaf</span>
+          <span id="analyzeBtnText">Analyze Leaf</span>
           <span id="analyzeBtnSpinner" class="spinner" style="display:none;"></span>
         </button>
 
-        <!-- Supported Crops Info -->
         <div class="crops-info">
           <span class="crops-label">Supported crops:</span>
-          <span class="crop-tag">🍅 Tomato</span>
-          <span class="crop-tag">🥔 Potato</span>
-          <span class="crop-tag">🌾 Rice</span>
-          <span class="crop-tag">🌽 Corn</span>
+          <span class="crop-tag">?? Tomato</span>
+          <span class="crop-tag">?? Potato</span>
+          <span class="crop-tag">?? Corn</span>
         </div>
       </div>
 
-      <!-- Loading State -->
       <div class="loading-card" id="loadingCard" style="display:none;">
         <div class="loading-animation">
           <div class="pulse-ring"></div>
           <div class="pulse-ring pulse-ring--2"></div>
-          <div class="pulse-icon">🌿</div>
+          <div class="pulse-icon">??</div>
         </div>
         <h3 class="loading-title">Analyzing your leaf...</h3>
         <div class="loading-steps">
@@ -138,116 +122,90 @@
         </div>
       </div>
 
-      <!-- Error State -->
       <div class="error-card" id="errorCard" style="display:none;">
-        <div class="error-icon">⚠️</div>
+        <div class="error-icon">??</div>
         <h3 class="error-title">Analysis Failed</h3>
         <p class="error-message" id="errorMessage"></p>
         <button class="btn btn--outline" id="retryBtn">Try Again</button>
       </div>
 
-      <!-- Result Card -->
       <div class="result-card" id="resultCard" style="display:none;">
-
-        <!-- Result Header -->
         <div class="result-header">
           <div class="result-header-left">
             <h2 class="result-title">Analysis Complete</h2>
             <p class="result-subtitle">Two-stage AI prediction result</p>
           </div>
-          <button class="btn btn--outline btn--sm" id="newAnalysisBtn">
-            + New Analysis
-          </button>
+          <button class="btn btn--outline btn--sm" id="newAnalysisBtn">+ New Analysis</button>
         </div>
 
-        <!-- Warning Banner (shown if low confidence) -->
         <div class="warning-banner" id="warningBanner" style="display:none;">
-          <span>⚠️</span>
+          <span>??</span>
           <span id="warningMessage"></span>
         </div>
 
-        <!-- Stage Results Row -->
         <div class="stages-row">
-          <!-- Stage 1 -->
           <div class="stage-box stage-box--crop">
-            <div class="stage-label">Stage 1 — Crop Identified</div>
-            <div class="stage-emoji" id="cropEmoji">🌿</div>
-            <div class="stage-value" id="cropName">—</div>
+            <div class="stage-label">Stage 1 - Crop Identified</div>
+            <div class="stage-emoji" id="cropEmoji">??</div>
+            <div class="stage-value" id="cropName">-</div>
             <div class="confidence-bar-wrap">
               <div class="confidence-bar-track">
                 <div class="confidence-bar-fill" id="cropConfBar"></div>
               </div>
-              <span class="confidence-pct" id="cropConfPct">—</span>
+              <span class="confidence-pct" id="cropConfPct">-</span>
             </div>
           </div>
 
-          <div class="stages-arrow">→</div>
+          <div class="stages-arrow">?</div>
 
-          <!-- Stage 2 -->
           <div class="stage-box stage-box--disease">
-            <div class="stage-label">Stage 2 — Disease Detected</div>
-            <div class="severity-badge" id="severityBadge">—</div>
-            <div class="stage-value" id="diseaseName">—</div>
+            <div class="stage-label">Stage 2 - Disease Detected</div>
+            <div class="severity-badge" id="severityBadge">-</div>
+            <div class="stage-value" id="diseaseName">-</div>
             <div class="confidence-bar-wrap">
               <div class="confidence-bar-track">
                 <div class="confidence-bar-fill confidence-bar-fill--disease" id="diseaseConfBar"></div>
               </div>
-              <span class="confidence-pct" id="diseaseConfPct">—</span>
+              <span class="confidence-pct" id="diseaseConfPct">-</span>
             </div>
           </div>
         </div>
 
-        <!-- Uploaded Image -->
         <div class="result-image-wrap">
           <img id="resultImage" class="result-image" alt="Analyzed leaf" />
         </div>
 
-        <!-- Disease Description -->
         <div class="info-section">
-          <h3 class="info-title">📋 About This Disease</h3>
-          <p class="info-text" id="diseaseDescription">—</p>
+          <h3 class="info-title">About This Disease</h3>
+          <p class="info-text" id="diseaseDescription">-</p>
         </div>
 
-        <!-- Symptoms -->
         <div class="info-section">
-          <h3 class="info-title">🔬 Symptoms</h3>
+          <h3 class="info-title">Symptoms</h3>
           <ul class="info-list" id="symptomsList"></ul>
         </div>
 
-        <!-- Treatment -->
         <div class="info-section info-section--treatment">
-          <h3 class="info-title">💊 Treatment</h3>
+          <h3 class="info-title">Treatment</h3>
           <ul class="info-list info-list--treatment" id="treatmentList"></ul>
         </div>
 
-        <!-- Prevention -->
         <div class="info-section info-section--prevention">
-          <h3 class="info-title">🛡️ Prevention</h3>
+          <h3 class="info-title">Prevention</h3>
           <ul class="info-list info-list--prevention" id="preventionList"></ul>
         </div>
 
-        <!-- Confidence Breakdown -->
         <details class="confidence-details">
           <summary>View full confidence breakdown</summary>
           <div class="confidence-breakdown" id="confidenceBreakdown"></div>
         </details>
-
       </div>
-      <!-- /result-card -->
-
     </div>
-    <!-- /container -->
   </main>
 
-  <!-- ── Footer ─────────────────────────────────────────────────────── -->
   <footer class="footer">
-    <p>
-      PlantGuard AI — Two-Stage Deep Learning System &nbsp;|&nbsp;
-      Built with TensorFlow, MobileNetV2 &amp; Flask
-    </p>
-    <p class="footer-note">
-      For educational and research purposes. Always consult an agricultural expert for critical decisions.
-    </p>
+    <p>PlantGuard AI | Built with TensorFlow, MobileNetV2 and Flask</p>
+    <p class="footer-note">For educational and research purposes. Always consult an agricultural expert for critical decisions.</p>
   </footer>
 
   <script src="/static/js/app.js"></script>
