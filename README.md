@@ -1,251 +1,127 @@
+![PlantGuard AI Header](file:///C:/Users/ACER/.gemini/antigravity/brain/70fcb70c-7b50-4119-bb9c-3389b174639f/plant_guard_ai_header_1773775092786.png)
+
 # 🌿 PlantGuard AI — Two-Stage Crop Disease Predictor
 
-A production-structured, beginner-friendly deep learning web application that:
-1. **Stage 1**: Identifies the crop type from a leaf image (Tomato, Potato, Rice, Corn)
-2. **Stage 2**: Detects the specific disease using a crop-specific model
-3. **Recommends** treatment and prevention methods
+A production-structured, beginner-friendly deep learning web application designed to identify crop types and detect diseases with high precision.
 
-**Tech Stack**: Python · TensorFlow/Keras · MobileNetV2 · Flask · HTML/CSS/JS
+> [!NOTE]
+> This project uses a two-stage pipeline: first identifying the crop (Tomato, Potato, Corn, etc.), then using a specialized model for that specific crop to identify the disease.
+
+## ✨ Key Features
+- **Stage 1 (Crop Detection)**: Identifies the crop type from a leaf image.
+- **Stage 2 (Disease Detection)**: Detects the specific disease using a crop-specific specialized model.
+- **Treatment Recommendations**: Provides actionable advice, prevention methods, and severity assessment.
+- **Modern UI**: Clean, responsive web interface for easy interaction.
+- **REST API**: Detailed JSON responses for integration with other services.
+
+---
+
+## 🏗️ Architecture
+
+```mermaid
+graph TD
+    A[User Uploads Image] --> B{Stage 1: Crop Classifier}
+    B -->|Tomato| C[Tomato Disease Model]
+    B -->|Potato| D[Potato Disease Model]
+    B -->|Corn| E[Corn Disease Model]
+    B -->|Rice| F[Rice Disease Model]
+    C --> G[Treatment Database]
+    D --> G
+    E --> G
+    F --> G
+    G --> H[Final Prediction & Advice]
+```
 
 ---
 
 ## 📁 Project Structure
 
-```
+```text
 plant disease predictor/
 ├── data/
 │   ├── raw/                         # ← Put your dataset here
-│   │   ├── train/
-│   │   │   ├── tomato/
-│   │   │   │   ├── early_blight/
-│   │   │   │   ├── late_blight/
-│   │   │   │   ├── leaf_mold/
-│   │   │   │   ├── septoria_leaf_spot/
-│   │   │   │   └── healthy/
-│   │   │   ├── potato/
-│   │   │   ├── rice/
-│   │   │   └── corn/
-│   │   └── val/                     # Same structure as train/
 │   └── treatments.json              # Disease treatment database
-├── models/                          # Trained .h5 models saved here
+├── models/                          # Trained .h5 models & class mappings
 ├── utils/
-│   └── preprocessing.py             # Image preprocessing & augmentation
+│   └── preprocessing.py             # Image preprocessing logic
 ├── training/
-│   ├── train_crop_classifier.py     # Stage 1 training
-│   ├── train_disease_classifier.py  # Stage 2 training
-│   └── evaluate_model.py            # Model evaluation
+│   ├── train_crop_classifier.py     # Stage 1 training script
+│   ├── train_disease_classifier.py  # Stage 2 training script
+│   └── evaluate_model.py            # Model evaluation utilities
 ├── prediction/
 │   └── predict.py                   # Two-stage prediction pipeline
-├── static/
-│   ├── css/style.css
-│   ├── js/app.js
-│   └── uploads/                     # Uploaded images stored here
+├── static/                          # Frontend assets (CSS, JS, Uploads)
 ├── templates/
-│   └── index.html
+│   └── index.html                   # Main UI
 ├── app.py                           # Flask web server
-└── requirements.txt
+└── requirements.txt                 # Project dependencies
 ```
 
 ---
 
-## ⚙️ Environment Setup
+## ⚡ Quick Start
 
-### Step 1 — Create a virtual environment
-
+### 1. Setup Environment
 ```bash
-# Windows
+# Create and activate virtual environment
 python -m venv venv
+# Windows:
 venv\Scripts\activate
-
-# macOS/Linux
-python3 -m venv venv
+# macOS/Linux:
 source venv/bin/activate
-```
 
-### Step 2 — Install dependencies
-
-```bash
+# Install dependencies
 pip install -r requirements.txt
 ```
 
-> **GPU Support (Optional)**: For faster training, install the GPU version:
-> ```bash
-> pip install tensorflow-gpu
-> ```
-
----
-
-## 📦 Dataset Preparation
-
-### Option A — PlantVillage Dataset (Recommended)
-
-1. Download from Kaggle: [PlantVillage Dataset](https://www.kaggle.com/datasets/emmarex/plantdisease)
-2. Organize into the folder structure shown above:
-   ```
-   data/raw/train/tomato/early_blight/  ← put tomato early blight images here
-   data/raw/train/tomato/healthy/       ← put healthy tomato images here
-   data/raw/val/tomato/early_blight/    ← validation images (20% split)
-   ```
-3. Recommended split: **80% train / 20% val**
-
-### Option B — Use the organize script
-
-After downloading PlantVillage, you can manually sort images into the folder structure. Aim for at least **200 images per class** for good results.
-
-### Supported Disease Classes
-
-| Crop   | Diseases |
-|--------|----------|
-| Tomato | Early Blight, Late Blight, Leaf Mold, Septoria Leaf Spot, Healthy |
-| Potato | Early Blight, Late Blight, Healthy |
-| Rice   | Brown Spot, Bacterial Blight, Leaf Smut, Healthy |
-| Corn   | Common Rust, Northern Leaf Blight, Healthy |
-
----
-
-## 🧠 Training the Models
-
-### Stage 1 — Crop Classifier
-
-```bash
-python training/train_crop_classifier.py
-```
-
-- Trains MobileNetV2 on `data/raw/train/` (all crop folders)
-- Saves model → `models/crop_model.h5`
-- Saves class mapping → `models/crop_classes.json`
-- Saves training plot → `models/crop_training_history.png`
-
-### Stage 2 — Disease Classifiers
-
-```bash
-# Train for a specific crop:
-python training/train_disease_classifier.py --crop tomato
-python training/train_disease_classifier.py --crop potato
-python training/train_disease_classifier.py --crop rice
-python training/train_disease_classifier.py --crop corn
-
-# OR train all at once:
-python training/train_disease_classifier.py --crop all
-```
-
-- Saves models → `models/tomato_disease_model.h5`, etc.
-- Saves class mappings → `models/tomato_disease_classes.json`, etc.
-
-### Model Evaluation
-
-```bash
-# Evaluate crop classifier:
-python training/evaluate_model.py --model models/crop_model.h5 --data data/raw/val
-
-# Evaluate tomato disease classifier:
-python training/evaluate_model.py --model models/tomato_disease_model.h5 --data data/raw/val/tomato
-```
-
-Outputs: accuracy, precision, recall, F1-score, confusion matrix PNG.
-
----
-
-## 🚀 Running the Web App
-
+### 2. Run the Web App
 ```bash
 python app.py
 ```
+Visit **http://127.0.0.1:5000** in your browser.
 
-Open your browser at: **http://127.0.0.1:5000**
+---
 
-### Testing the Prediction Pipeline (without browser)
+## 🧠 Training & Evaluation
 
+### Stage 1 — Crop Classifier
 ```bash
-python prediction/predict.py --image path/to/your/leaf.jpg
+python training/train_crop_classifier.py
 ```
+- Trains on all crop folders in `data/raw/train/`.
+- Saves to `models/crop_model.h5`.
 
----
-
-## 🌐 Deployment
-
-### Local Network (share with others on same WiFi)
-
-The Flask app already binds to `0.0.0.0`, so it's accessible on your local network:
-```
-http://<your-ip-address>:5000
-```
-
-### Production Deployment with Gunicorn (Linux/macOS)
-
+### Stage 2 — Disease Classifiers
 ```bash
-pip install gunicorn
-gunicorn -w 2 -b 0.0.0.0:5000 app:app
+# Train for a specific crop:
+python training/train_disease_classifier.py --crop tomato
+
+# Train all supported crops:
+python training/train_disease_classifier.py --crop all
 ```
 
-### Deploy to a Cloud VM (e.g., AWS EC2, Google Cloud)
-
-1. SSH into your VM
-2. Clone/upload the project
-3. Install dependencies: `pip install -r requirements.txt`
-4. Copy trained models to `models/` folder
-5. Run with Gunicorn:
-   ```bash
-   gunicorn -w 2 -b 0.0.0.0:80 app:app
-   ```
-
-### Deploy to Render (Free Tier)
-
-1. Push project to GitHub
-2. Go to [render.com](https://render.com) → New Web Service
-3. Connect your repo
-4. Build command: `pip install -r requirements.txt`
-5. Start command: `gunicorn app:app`
-
-> ⚠️ **Note**: Trained `.h5` model files must be included in your deployment. They are large (~15 MB each) — consider using Git LFS or uploading them separately.
+> [!TIP]
+> For better accuracy, ensure you have at least 200 images per class. The pipeline uses **Transfer Learning** with MobileNetV2 and **Data Augmentation** for robust performance.
 
 ---
 
-## 📈 Accuracy Improvement Tips
+## 📊 Supported Diseases
 
-### 1. Data Augmentation (already implemented)
-The training scripts use:
-- Horizontal flips, rotation, zoom, brightness variation
-- These prevent overfitting and improve generalization
-
-### 2. Transfer Learning (already implemented)
-- MobileNetV2 pretrained on ImageNet provides strong feature extraction
-- Two-phase training: frozen base → fine-tuning top layers
-
-### 3. Class Balancing (already implemented)
-- `compute_class_weight("balanced")` automatically handles imbalanced datasets
-
-### 4. Additional Tips
-- **More data**: Aim for 500+ images per class for best results
-- **Higher resolution**: Try 256×256 or 299×299 input (update `IMG_SIZE` in `preprocessing.py`)
-- **Ensemble**: Train multiple models and average their predictions
-- **ResNet50**: Swap MobileNetV2 for ResNet50 in the training scripts for potentially higher accuracy (slower training)
-- **Learning rate scheduling**: Already implemented via `ReduceLROnPlateau`
-
----
-
-## 🔧 Configuration
-
-| Setting | File | Default |
-|---------|------|---------|
-| Image size | `utils/preprocessing.py` | 224×224 |
-| Batch size | `utils/preprocessing.py` | 32 |
-| Training epochs | `training/train_*.py` | 10 + 20 |
-| Confidence threshold | `prediction/predict.py` | 60% |
-| Max upload size | `app.py` | 16 MB |
-| Flask port | `app.py` | 5000 |
+| Crop   | Supported Disease Classes |
+| :--- | :--- |
+| **Tomato** | Early Blight, Late Blight, Leaf Mold, Septoria Leaf Spot, Healthy |
+| **Potato** | Early Blight, Late Blight, Healthy |
+| **Corn** | Common Rust, Northern Leaf Blight, Healthy |
+| **Rice** | Brown Spot, Bacterial Blight, Leaf Smut, Healthy |
 
 ---
 
 ## 📋 API Reference
 
 ### `POST /predict`
+Upload a leaf image and get a detailed diagnosis.
 
-Upload a leaf image and get a prediction.
-
-**Request**: `multipart/form-data` with field `image`
-
-**Response**:
+**Response Example:**
 ```json
 {
   "success": true,
@@ -255,27 +131,34 @@ Upload a leaf image and get a prediction.
   "disease_confidence": 89.1,
   "treatment": {
     "display_name": "Early Blight",
+    "severity": "Moderate",
     "description": "...",
-    "symptoms": ["..."],
     "treatment": ["..."],
-    "prevention": ["..."],
-    "severity": "Moderate"
-  },
-  "image_url": "/static/uploads/abc123_leaf.jpg",
-  "low_confidence_warning": false
+    "prevention": ["..."]
+  }
 }
 ```
 
 ---
 
-## 📚 References
+## 🌐 Deployment
 
-- [PlantVillage Dataset](https://www.kaggle.com/datasets/emmarex/plantdisease)
-- [MobileNetV2 Paper](https://arxiv.org/abs/1801.04381)
-- [TensorFlow Transfer Learning Guide](https://www.tensorflow.org/tutorials/images/transfer_learning)
-- [Flask Documentation](https://flask.palletsprojects.com/)
-#   p l a n t - d i s e a s e - p r e d i c t o r  
- #   p l a n t - d i s e a s e - p r e d i c t o r  
- #   p l a n t - d i s e a s e - p r e d i c t o r  
- #   p l a n t - d i s e a s e - p r e d i c t o r  
- 
+### Production with Gunicorn
+```bash
+pip install gunicorn
+gunicorn -w 2 -b 0.0.0.0:5000 app:app
+```
+
+### Deploy to Render
+1. Push to GitHub.
+2. Connect repo to [Render](https://render.com).
+3. Build Command: `pip install -r requirements.txt`.
+4. Start Command: `gunicorn app:app`.
+
+---
+
+## 🤝 Contribution
+Contributions are welcome! If you have suggestions for new features or improvements, please feel free to open an issue or submit a pull request.
+
+## 📄 License
+This project is licensed under the MIT License - see the LICENSE file for details.
