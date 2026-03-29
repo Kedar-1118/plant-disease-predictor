@@ -247,6 +247,32 @@ def train_for_crop(crop: str):
     # ── Plot history ───────────────────────────────────────────────────────
     plot_history(history_frozen, history_finetune, crop)
 
+    # ── Save metadata ─────────────────────────────────────────────────────
+    from save_metadata import save_model_metadata
+    total_epochs = len(history_frozen.history["accuracy"]) + len(history_finetune.history["accuracy"])
+    save_model_metadata(
+        model_path=model_save_path,
+        val_accuracy=val_acc,
+        val_loss=val_loss,
+        epochs_run=total_epochs,
+        num_classes=num_classes,
+        class_names=class_names,
+        hyperparameters={
+            "learning_rate": LEARNING_RATE,
+            "finetune_lr": FINETUNE_LR,
+            "batch_size": 32,
+            "epochs_frozen": EPOCHS_FROZEN,
+            "epochs_finetune": EPOCHS_FINETUNE,
+            "unfrozen_layers": 40,
+        },
+        dataset_info={
+            "train_samples": train_gen.samples,
+            "val_samples": val_gen.samples,
+            "train_dir": train_dir,
+            "val_dir": val_dir,
+        },
+    )
+
 
 def main():
     # Configure GPU

@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PlantGuard AI — Interview Preparation Guide</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --bg: #0a0e1a; --surface: #111827; --surface2: #1a2236; --surface3: #1f2a40;
+      --border: #2a3550; --text: #e2e8f0; --text2: #94a3b8; --text3: #64748b;
+      --accent: #22d3ee; --accent2: #06b6d4; --green: #34d399; --green-bg: rgba(52,211,153,.1);
+      --orange: #fb923c; --orange-bg: rgba(251,146,60,.1); --red: #f87171; --red-bg: rgba(248,113,113,.1);
+      --purple: #a78bfa; --purple-bg: rgba(167,139,250,.1); --blue: #60a5fa; --blue-bg: rgba(96,165,250,.1);
+      --yellow: #fbbf24; --radius: 16px; --radius-sm: 10px;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; }
+    .container { max-width: 900px; margin: 0 auto; padding: 0 24px; }
+
+    /* NAV */
+    .topnav { position: sticky; top: 0; z-index: 100; background: rgba(10,14,26,.85); backdrop-filter: blur(16px); border-bottom: 1px solid var(--border); }
+    .topnav-inner { display: flex; align-items: center; justify-content: space-between; padding: 14px 0; }
+    .topnav-brand { font-weight: 800; font-size: 1.1rem; background: linear-gradient(135deg, var(--accent), var(--green)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .topnav-links { display: flex; gap: 6px; flex-wrap: wrap; }
+    .topnav-links a { font-size: .72rem; color: var(--text2); text-decoration: none; padding: 4px 10px; border-radius: 6px; transition: .2s; border: 1px solid transparent; }
+    .topnav-links a:hover { color: var(--accent); border-color: var(--border); background: var(--surface); }
+
+    /* HERO */
+    .hero { text-align: center; padding: 80px 0 50px; position: relative; overflow: hidden; }
+    .hero::before { content: ''; position: absolute; width: 500px; height: 500px; background: radial-gradient(circle, rgba(34,211,238,.08), transparent 70%); top: -100px; left: 50%; transform: translateX(-50%); }
+    .hero-badge { display: inline-block; padding: 6px 18px; border-radius: 99px; font-size: .75rem; font-weight: 600; background: var(--green-bg); color: var(--green); border: 1px solid rgba(52,211,153,.2); margin-bottom: 20px; letter-spacing: .5px; }
+    .hero h1 { font-size: clamp(2rem, 5vw, 3.2rem); font-weight: 900; line-height: 1.15; margin-bottom: 16px; }
+    .hero h1 span { background: linear-gradient(135deg, var(--accent), var(--green)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .hero p { color: var(--text2); font-size: 1.05rem; max-width: 620px; margin: 0 auto; }
+
+    /* SECTION */
+    .section { padding: 48px 0; }
+    .section-num { font-size: .7rem; font-weight: 700; color: var(--accent); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 8px; }
+    .section h2 { font-size: 1.65rem; font-weight: 800; margin-bottom: 20px; }
+    .section h3 { font-size: 1.1rem; font-weight: 700; margin: 24px 0 10px; color: var(--accent); }
+    .divider { border: none; border-top: 1px solid var(--border); margin: 0; }
+
+    /* CARDS */
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; margin-bottom: 16px; transition: .3s; }
+    .card:hover { border-color: rgba(34,211,238,.25); transform: translateY(-2px); box-shadow: 0 8px 32px rgba(0,0,0,.3); }
+    .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
+
+    /* TAG */
+    .tag { display: inline-block; padding: 3px 10px; border-radius: 6px; font-size: .72rem; font-weight: 600; margin: 2px 2px; }
+    .tag--cyan { background: rgba(34,211,238,.12); color: var(--accent); }
+    .tag--green { background: var(--green-bg); color: var(--green); }
+    .tag--purple { background: var(--purple-bg); color: var(--purple); }
+    .tag--orange { background: var(--orange-bg); color: var(--orange); }
+    .tag--blue { background: var(--blue-bg); color: var(--blue); }
+    .tag--red { background: var(--red-bg); color: var(--red); }
+
+    /* LISTS */
+    ul.fancy { list-style: none; }
+    ul.fancy li { padding: 6px 0 6px 24px; position: relative; color: var(--text2); }
+    ul.fancy li::before { content: '▹'; position: absolute; left: 0; color: var(--accent); font-weight: 700; }
+    .kv { display: flex; gap: 8px; padding: 7px 0; border-bottom: 1px solid rgba(42,53,80,.5); }
+    .kv:last-child { border-bottom: none; }
+    .kv-key { min-width: 180px; font-weight: 600; color: var(--text); font-size: .88rem; }
+    .kv-val { color: var(--text2); font-size: .88rem; }
+
+    /* CODE */
+    .codeblock { background: #0d1117; border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 18px 20px; font-family: 'SF Mono', 'Fira Code', monospace; font-size: .82rem; color: var(--green); overflow-x: auto; margin: 12px 0; line-height: 1.8; white-space: pre; }
+
+    /* QA */
+    .qa { margin-bottom: 16px; }
+    .qa-q { font-weight: 700; color: var(--orange); margin-bottom: 4px; font-size: .95rem; }
+    .qa-a { color: var(--text2); padding-left: 16px; border-left: 2px solid var(--border); font-size: .9rem; }
+
+    /* FLOW */
+    .flow { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin: 14px 0; }
+    .flow-step { padding: 8px 16px; border-radius: var(--radius-sm); font-size: .8rem; font-weight: 600; background: var(--surface2); border: 1px solid var(--border); }
+    .flow-arrow { color: var(--accent); font-size: 1.1rem; }
+
+    /* ARCH DIAGRAM */
+    .arch-box { background: linear-gradient(135deg, var(--surface), var(--surface2)); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; margin: 16px 0; text-align: center; }
+
+    /* TIMER BADGES */
+    .timer-badge { display: inline-flex; align-items: center; gap: 6px; background: var(--surface2); border: 1px solid var(--border); border-radius: 99px; padding: 4px 14px; font-size: .75rem; font-weight: 600; color: var(--yellow); margin-bottom: 12px; }
+
+    /* FOOTER */
+    .footer { text-align: center; padding: 40px 0; color: var(--text3); font-size: .82rem; border-top: 1px solid var(--border); }
+    @media (max-width: 600px) { .kv { flex-direction: column; gap: 2px; } .kv-key { min-width: auto; } }
+  </style>
+</head>
+<body>
+<nav class="topnav"><div class="container topnav-inner">
+  <span class="topnav-brand">🌿 PlantGuard AI — Interview Guide</span>
+  <div class="topnav-links">
+    <a href="#overview">Overview</a><a href="#dataset">Dataset</a><a href="#architecture">Model</a>
+    <a href="#training">Training</a><a href="#eval">Evaluation</a><a href="#deploy">Deploy</a>
+    <a href="#qa">Q&A</a><a href="#pitch">Pitch</a>
+  </div>
+</div></nav>
+
+<div class="container">
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-badge">🎯 FAANG-LEVEL INTERVIEW PREP</div>
+  <h1>PlantGuard AI<br/><span>Two-Stage Crop Disease Predictor</span></h1>
+  <p>A complete, structured, interview-ready explanation covering every technical and practical detail of this Deep Learning project.</p>
+</section>
+<hr class="divider"/>
+
+<!-- 1. PROJECT OVERVIEW -->
+<section class="section" id="overview">
+  <div class="section-num">Section 01</div>
+  <h2>🎯 Project Overview</h2>
+
+  <h3>Problem Statement</h3>
+  <div class="card">
+    <p>Plant diseases cause <strong>up to 30–40% crop yield losses</strong> globally each year. Smallholder farmers often lack timely access to agricultural experts, resulting in delayed diagnosis and treatment. This project builds an <strong>AI-powered, image-based diagnostic system</strong> that identifies the crop species and its disease from a single leaf photo, then provides actionable treatment recommendations — all within seconds.</p>
+  </div>
+
+  <h3>Business / Use-Case Relevance</h3>
+  <ul class="fancy">
+    <li><strong>Agriculture:</strong> Real-time disease detection for farmers via mobile/web, reducing crop losses.</li>
+    <li><strong>AgriTech Platforms:</strong> Embeddable API for precision agriculture dashboards.</li>
+    <li><strong>Government/NGOs:</strong> Scalable disease monitoring at the regional level.</li>
+    <li><strong>Education:</strong> Training tool for agriculture students and extension workers.</li>
+  </ul>
+
+  <h3>Why Deep Learning?</h3>
+  <div class="card">
+    <p>Traditional rule-based image analysis fails with the visual variability of plant diseases. <strong>Convolutional Neural Networks (CNNs)</strong> excel at hierarchical feature extraction — learning low-level edges and textures, then composing them into high-level disease patterns. Transfer learning on <strong>MobileNetV2</strong> allows us to leverage ImageNet's 14M images while adapting to our domain with a small, focused dataset. Think of it like hiring a doctor who already knows anatomy (ImageNet) and training them to specialize in dermatology (plant leaf diseases).</p>
+  </div>
+</section>
+<hr class="divider"/>
+
+<!-- 2. DATASET -->
+<section class="section" id="dataset">
+  <div class="section-num">Section 02</div>
+  <h2>📊 Dataset</h2>
+
+  <h3>Sources (Multi-Dataset Fusion)</h3>
+  <div class="card-grid">
+    <div class="card">
+      <strong>PlantVillage</strong>
+      <p style="color:var(--text2);font-size:.88rem;margin-top:4px;">~54,000 lab-quality leaf images. Primary source for tomato and potato disease classes.</p>
+      <span class="tag tag--green">~687 MB</span>
+    </div>
+    <div class="card">
+      <strong>PlantDoc</strong>
+      <p style="color:var(--text2);font-size:.88rem;margin-top:4px;">~2,500 real-world field images. Adds noise, varied lighting, and backgrounds for robustness.</p>
+      <span class="tag tag--purple">~925 MB</span>
+    </div>
+    <div class="card">
+      <strong>TomatoLeaf</strong>
+      <p style="color:var(--text2);font-size:.88rem;margin-top:4px;">~10,000 tomato-specific images with pre-split train/val directories.</p>
+      <span class="tag tag--orange">~187 MB</span>
+    </div>
+  </div>
+
+  <h3>Data Size & Classes</h3>
+  <div class="card">
+    <div class="kv"><span class="kv-key">Crop Classes (Stage 1)</span><span class="kv-val">3 — Corn, Potato, Tomato</span></div>
+    <div class="kv"><span class="kv-key">Tomato Diseases</span><span class="kv-val">10 — bacterial_spot, early_blight, healthy, late_blight, leaf_mold, mosaic_virus, septoria_leaf_spot, spider_mites, target_spot, yellow_leaf_curl_virus</span></div>
+    <div class="kv"><span class="kv-key">Potato Diseases</span><span class="kv-val">3 — early_blight, healthy, late_blight</span></div>
+    <div class="kv"><span class="kv-key">Corn Diseases</span><span class="kv-val">3 — common_rust, gray_leaf_spot, northern_leaf_blight</span></div>
+    <div class="kv"><span class="kv-key">Total Disease Classes</span><span class="kv-val">16 classes across 3 crops</span></div>
+    <div class="kv"><span class="kv-key">Image Resolution</span><span class="kv-val">Resized to 224 × 224 × 3 (RGB)</span></div>
+  </div>
+
+  <h3>Preprocessing Pipeline</h3>
+  <div class="card">
+    <div class="kv"><span class="kv-key">Cleaning</span><span class="kv-val">Image verification via PIL, corrupt files discarded, RGB conversion enforced</span></div>
+    <div class="kv"><span class="kv-key">Normalization</span><span class="kv-val">Pixel values rescaled to [0, 1] via <code>rescale=1./255</code></span></div>
+    <div class="kv"><span class="kv-key">Augmentation (Train)</span><span class="kv-val">Horizontal flip, rotation (±20°), zoom (0.2), shifts (0.1), brightness [0.8–1.2], shear (0.1)</span></div>
+    <div class="kv"><span class="kv-key">Augmentation (Val)</span><span class="kv-val">Rescale only — no augmentation to preserve evaluation integrity</span></div>
+    <div class="kv"><span class="kv-key">Class Balancing</span><span class="kv-val"><code>sklearn.compute_class_weight("balanced")</code> — inverse frequency weighting</span></div>
+  </div>
+
+  <h3>Train / Validation Split</h3>
+  <div class="card">
+    <div class="kv"><span class="kv-key">Strategy</span><span class="kv-val">80/20 stratified split on PlantVillage; PlantDoc & TomatoLeaf use their native train/test splits</span></div>
+    <div class="kv"><span class="kv-key">Seed</span><span class="kv-val">42 — ensures reproducibility</span></div>
+  </div>
+</section>
+<hr class="divider"/>
+
+<!-- 3. MODEL ARCHITECTURE -->
+<section class="section" id="architecture">
+  <div class="section-num">Section 03</div>
+  <h2>🧠 Model Architecture</h2>
+
+  <h3>Two-Stage Pipeline Design</h3>
+  <div class="flow">
+    <span class="flow-step">📷 Leaf Image</span><span class="flow-arrow">→</span>
+    <span class="flow-step" style="border-color:var(--accent);">Stage 1: Crop Classifier</span><span class="flow-arrow">→</span>
+    <span class="flow-step" style="border-color:var(--green);">Stage 2: Disease Classifier</span><span class="flow-arrow">→</span>
+    <span class="flow-step" style="border-color:var(--orange);">Treatment Lookup</span>
+  </div>
+  <div class="card">
+    <p><strong>Why two stages?</strong> A single monolithic model for all 16 diseases across 3 crops would struggle with inter-crop confusion. By first identifying the crop (3-class), we route to a <em>specialized</em> disease model (3–10 classes), dramatically improving accuracy. Analogy: Instead of one doctor for everything, you see a GP first (crop ID), then a specialist (disease diagnosis).</p>
+  </div>
+
+  <h3>Base Model — MobileNetV2</h3>
+  <div class="card">
+    <div class="kv"><span class="kv-key">Architecture</span><span class="kv-val">MobileNetV2 (inverted residual blocks, depthwise separable convolutions)</span></div>
+    <div class="kv"><span class="kv-key">Pre-trained On</span><span class="kv-val">ImageNet (1.4M images, 1,000 classes)</span></div>
+    <div class="kv"><span class="kv-key">Why MobileNetV2?</span><span class="kv-val">Lightweight (~3.4M params), fast inference, ideal for deployment on edge/mobile devices</span></div>
+    <div class="kv"><span class="kv-key">Input Shape</span><span class="kv-val">(None, 224, 224, 3)</span></div>
+  </div>
+
+  <h3>Custom Classification Head</h3>
+  <div class="codeblock">MobileNetV2 base (frozen/unfrozen) → (None, 7, 7, 1280)
+  ↓ GlobalAveragePooling2D         → (None, 1280)
+  ↓ BatchNormalization             → (None, 1280)
+  ↓ Dense(512, relu)               → (None, 512)     # Disease model
+    Dense(256, relu)               → (None, 256)     # Crop model uses 256 directly
+  ↓ Dropout(0.5)                   → regularization
+  ↓ Dense(256, relu) + Dropout(0.3)  → Disease model only (deeper head)
+  ↓ Dense(num_classes, softmax)    → (None, C)       # C = 3 or 10</div>
+
+  <h3>Key Architecture Decisions</h3>
+  <div class="card">
+    <div class="kv"><span class="kv-key">Initialization</span><span class="kv-val">ImageNet weights (He initialization via Keras defaults for Dense layers)</span></div>
+    <div class="kv"><span class="kv-key">Loss Function</span><span class="kv-val"><code>categorical_crossentropy</code> — standard for multi-class classification with one-hot labels</span></div>
+    <div class="kv"><span class="kv-key">Optimizer</span><span class="kv-val">Adam (adaptive learning rates per parameter; combines momentum + RMSprop)</span></div>
+    <div class="kv"><span class="kv-key">Output Activation</span><span class="kv-val">Softmax — converts logits to probability distribution summing to 1.0</span></div>
+  </div>
+</section>
+<hr class="divider"/>
+
+<!-- 4. TRAINING -->
+<section class="section" id="training">
+  <div class="section-num">Section 04</div>
+  <h2>⚙️ Training Process</h2>
+
+  <h3>Two-Phase Training Strategy</h3>
+  <div class="card-grid">
+    <div class="card">
+      <strong style="color:var(--accent);">Phase 1: Feature Extraction</strong>
+      <div class="kv"><span class="kv-key">Base Model</span><span class="kv-val">Frozen (all layers)</span></div>
+      <div class="kv"><span class="kv-key">Epochs</span><span class="kv-val">10</span></div>
+      <div class="kv"><span class="kv-key">Learning Rate</span><span class="kv-val">1e-4</span></div>
+      <div class="kv"><span class="kv-key">Goal</span><span class="kv-val">Train only the custom head</span></div>
+    </div>
+    <div class="card">
+      <strong style="color:var(--green);">Phase 2: Fine-Tuning</strong>
+      <div class="kv"><span class="kv-key">Unfrozen Layers</span><span class="kv-val">Top 30 (crop) / 40 (disease)</span></div>
+      <div class="kv"><span class="kv-key">Epochs</span><span class="kv-val">20 (crop) / 25 (disease)</span></div>
+      <div class="kv"><span class="kv-key">Learning Rate</span><span class="kv-val">1e-5 (10× lower)</span></div>
+      <div class="kv"><span class="kv-key">Goal</span><span class="kv-val">Adapt higher conv layers to domain</span></div>
+    </div>
+  </div>
+
+  <h3>Regularization & Callbacks</h3>
+  <div class="card">
+    <div class="kv"><span class="kv-key">Dropout</span><span class="kv-val">0.5 (first layer), 0.3 (second layer, disease model)</span></div>
+    <div class="kv"><span class="kv-key">Batch Normalization</span><span class="kv-val">After GlobalAveragePooling — stabilizes activations</span></div>
+    <div class="kv"><span class="kv-key">EarlyStopping</span><span class="kv-val">patience=5 (Phase 1) / 7–8 (Phase 2), restore_best_weights=True</span></div>
+    <div class="kv"><span class="kv-key">ReduceLROnPlateau</span><span class="kv-val">factor=0.3–0.5, patience=3–4 — halves LR when val_loss plateaus</span></div>
+    <div class="kv"><span class="kv-key">ModelCheckpoint</span><span class="kv-val">save_best_only=True on val_accuracy — saves the best model weights</span></div>
+    <div class="kv"><span class="kv-key">Class Weights</span><span class="kv-val">Balanced weighting via sklearn — penalizes misclassification of rare classes</span></div>
+    <div class="kv"><span class="kv-key">Mixed Precision</span><span class="kv-val">FP16 on GPU — 2× throughput on compatible hardware</span></div>
+  </div>
+
+  <h3>Handling Overfitting / Underfitting</h3>
+  <div class="card">
+    <ul class="fancy">
+      <li><strong>Overfitting mitigated by:</strong> Data augmentation, dropout, early stopping, class weights, two-phase LR schedule</li>
+      <li><strong>Underfitting mitigated by:</strong> Transfer learning (pre-trained features), fine-tuning deeper layers, sufficient epochs with patience</li>
+      <li><strong>Monitoring:</strong> Train vs. Val accuracy/loss plots saved per model — visual gap inspection</li>
+    </ul>
+  </div>
+</section>
+<hr class="divider"/>
+
+<!-- 5. EVALUATION -->
+<section class="section" id="eval">
+  <div class="section-num">Section 05</div>
+  <h2>📈 Evaluation</h2>
+  <div class="card">
+    <div class="kv"><span class="kv-key">Metrics Used</span><span class="kv-val">Accuracy, Precision, Recall, F1-Score (per-class & macro), Confusion Matrix</span></div>
+    <div class="kv"><span class="kv-key">Evaluation Tool</span><span class="kv-val"><code>training/evaluate_model.py</code> — generates classification report + confusion matrix heatmap</span></div>
+    <div class="kv"><span class="kv-key">Confidence Threshold</span><span class="kv-val">60% — predictions below this trigger a low-confidence warning to the user</span></div>
+  </div>
+  <h3>Confusion Matrix</h3>
+  <div class="card">
+    <p>The confusion matrix is generated using <code>sklearn.metrics.confusion_matrix</code> and visualized as a Seaborn heatmap. Diagonal values represent correct predictions; off-diagonals expose class confusions. For example, early_blight vs. target_spot may show confusion due to similar concentric-ring patterns — this is expected and documented.</p>
+  </div>
+</section>
+<hr class="divider"/>
+
+<!-- 6. DEPLOYMENT -->
+<section class="section" id="deploy">
+  <div class="section-num">Section 06</div>
+  <h2>🚀 Deployment</h2>
+  <div class="card">
+    <div class="kv"><span class="kv-key">Framework</span><span class="kv-val">Flask (Python web framework) with CORS enabled</span></div>
+    <div class="kv"><span class="kv-key">API Endpoint</span><span class="kv-val"><code>POST /predict</code> — accepts multipart/form-data with image field</span></div>
+    <div class="kv"><span class="kv-key">Health Check</span><span class="kv-val"><code>GET /health</code> — reports readiness, supported crops, warnings</span></div>
+    <div class="kv"><span class="kv-key">Temp File Handling</span><span class="kv-val">Upload saved to <code>tempfile.mkstemp()</code>, deleted in <code>finally</code> block</span></div>
+    <div class="kv"><span class="kv-key">Model Loading</span><span class="kv-val">Lazy singleton — loaded once on first request, cached in module globals</span></div>
+    <div class="kv"><span class="kv-key">Error Handling</span><span class="kv-val">Structured JSON errors with codes: missing_image, invalid_file_type, unsupported_crop, etc.</span></div>
+    <div class="kv"><span class="kv-key">Config</span><span class="kv-val">Environment variables via <code>AppConfig.from_env()</code> (12-factor app pattern)</span></div>
+  </div>
+
+  <h3>System Architecture Flow</h3>
+  <div class="flow">
+    <span class="flow-step">🖥️ Browser UI</span><span class="flow-arrow">→</span>
+    <span class="flow-step">📤 Upload (JS fetch)</span><span class="flow-arrow">→</span>
+    <span class="flow-step">🌐 Flask /predict</span><span class="flow-arrow">→</span>
+    <span class="flow-step">🖼️ PIL Preprocess</span><span class="flow-arrow">→</span>
+    <span class="flow-step" style="border-color:var(--accent);">🌾 Crop Model</span><span class="flow-arrow">→</span>
+    <span class="flow-step" style="border-color:var(--green);">🔬 Disease Model</span><span class="flow-arrow">→</span>
+    <span class="flow-step" style="border-color:var(--orange);">💊 Treatment JSON</span><span class="flow-arrow">→</span>
+    <span class="flow-step">📊 JSON Response</span>
+  </div>
+</section>
+<hr class="divider"/>
+
+<!-- 7. TECH STACK -->
+<section class="section" id="stack">
+  <div class="section-num">Section 07</div>
+  <h2>🛠️ Tech Stack</h2>
+  <div class="card">
+    <p>
+      <span class="tag tag--cyan">Python 3.10+</span>
+      <span class="tag tag--orange">TensorFlow 2.15</span>
+      <span class="tag tag--green">Keras</span>
+      <span class="tag tag--purple">MobileNetV2</span>
+      <span class="tag tag--blue">Flask</span>
+      <span class="tag tag--cyan">Flask-CORS</span>
+      <span class="tag tag--orange">OpenCV</span>
+      <span class="tag tag--green">Pillow (PIL)</span>
+      <span class="tag tag--purple">NumPy</span>
+      <span class="tag tag--blue">Pandas</span>
+      <span class="tag tag--cyan">scikit-learn</span>
+      <span class="tag tag--orange">Matplotlib</span>
+      <span class="tag tag--green">Seaborn</span>
+      <span class="tag tag--purple">Werkzeug</span>
+      <span class="tag tag--blue">Pytest</span>
+      <span class="tag tag--red">HTML/CSS/JS</span>
+      <span class="tag tag--cyan">Git</span>
+    </p>
+  </div>
+</section>
+<hr class="divider"/>
+
+<!-- 8. CHALLENGES -->
+<section class="section" id="challenges">
+  <div class="section-num">Section 08</div>
+  <h2>⚡ Challenges & Solutions</h2>
+  <div class="card-grid">
+    <div class="card">
+      <strong style="color:var(--red);">Class Imbalance</strong>
+      <p style="color:var(--text2);font-size:.88rem;">Tomato had 10 disease classes vs. potato's 3. Solved with <code>compute_class_weight("balanced")</code> and per-crop dedicated models.</p>
+    </div>
+    <div class="card">
+      <strong style="color:var(--red);">Multi-Dataset Inconsistency</strong>
+      <p style="color:var(--text2);font-size:.88rem;">Different naming conventions across PlantVillage, PlantDoc, TomatoLeaf. Solved with a comprehensive <code>FOLDER_MAPPING</code> dictionary normalizing 30+ folder names.</p>
+    </div>
+    <div class="card">
+      <strong style="color:var(--red);">TensorFlow Mixed Precision Bug</strong>
+      <p style="color:var(--text2);font-size:.88rem;">Keras missing <code>quantization_mode</code> attribute. Monkey-patched at import with <code>Policy.quantization_mode = property(lambda self: None)</code>.</p>
+    </div>
+    <div class="card">
+      <strong style="color:var(--red);">Real-World Image Quality</strong>
+      <p style="color:var(--text2);font-size:.88rem;">Lab images (PlantVillage) differ from field photos. Fused PlantDoc's noisy real-world images + aggressive augmentation to bridge the domain gap.</p>
+    </div>
+  </div>
+</section>
+<hr class="divider"/>
+
+<!-- 9. IMPROVEMENTS -->
+<section class="section" id="improvements">
+  <div class="section-num">Section 09</div>
+  <h2>🔮 Future Scope & Improvements</h2>
+  <ul class="fancy">
+    <li><strong>More Crops:</strong> Extend to rice, wheat, cotton — treatment JSON already includes rice.</li>
+    <li><strong>EfficientNet/ViT:</strong> Replace MobileNetV2 with EfficientNet-B3 or Vision Transformer for higher accuracy.</li>
+    <li><strong>Grad-CAM Explainability:</strong> Overlay heatmaps showing which leaf regions drove the prediction.</li>
+    <li><strong>TFLite / ONNX:</strong> Convert models for mobile (Android/iOS) deployment.</li>
+    <li><strong>Docker + Cloud:</strong> Containerize with Docker, deploy to AWS Lambda / GCP Cloud Run.</li>
+    <li><strong>Severity Scoring:</strong> Predict disease severity (%) alongside classification.</li>
+    <li><strong>Multi-Language:</strong> Provide treatment guidance in local languages for global accessibility.</li>
+    <li><strong>Active Learning:</strong> Let farmers submit misclassified images to continuously improve the model.</li>
+  </ul>
+</section>
+<hr class="divider"/>
+
+<!-- 10. INTERVIEW Q&A -->
+<section class="section" id="qa">
+  <div class="section-num">Section 10</div>
+  <h2>💬 Interview Q&A Preparation</h2>
+
+  <div class="qa">
+    <div class="qa-q">Q: Why did you use a two-stage model instead of one model for all classes?</div>
+    <div class="qa-a">A single model with 16 output classes across 3 different crops would learn cross-crop confusions (e.g., tomato early blight vs. potato early blight look different but share a label). The two-stage approach first solves a simpler 3-class crop identification problem, then routes to a domain-specific model. This modular design improves accuracy, is easier to debug, and allows independent retraining of each crop's disease model.</div>
+  </div>
+  <div class="qa">
+    <div class="qa-q">Q: Why MobileNetV2 over ResNet or VGG?</div>
+    <div class="qa-a">MobileNetV2 uses depthwise separable convolutions — reducing parameters from ~138M (VGG16) to ~3.4M while maintaining competitive accuracy. It's designed for mobile/embedded deployment. Since this is a web app that may be deployed on edge devices or resource-constrained servers, MobileNetV2 provides the best accuracy-to-efficiency trade-off.</div>
+  </div>
+  <div class="qa">
+    <div class="qa-q">Q: What is transfer learning and how did you use it?</div>
+    <div class="qa-a">Transfer learning reuses a model trained on a large dataset (ImageNet) as a feature extractor for a new, related task. I froze MobileNetV2's convolutional layers, added a custom classification head, trained it for 10 epochs, then unfroze the top 30–40 layers for fine-tuning with a 10× lower learning rate. This prevents catastrophic forgetting of the pre-trained features.</div>
+  </div>
+  <div class="qa">
+    <div class="qa-q">Q: How do you handle class imbalance?</div>
+    <div class="qa-a">I use sklearn's <code>compute_class_weight("balanced")</code>, which assigns higher weights to underrepresented classes during training. This makes the loss function penalize errors on minority classes more heavily. Combined with data augmentation (geometric transforms, brightness shifts), this ensures the model doesn't just memorize the majority class.</div>
+  </div>
+  <div class="qa">
+    <div class="qa-q">Q: What happens if the model gets a non-leaf image?</div>
+    <div class="qa-a">The system has a 60% confidence threshold. If the crop classifier's top prediction is below this, the response includes <code>low_confidence_warning: true</code> with a message. The frontend shows a warning banner. Additionally, the file validation layer rejects non-image files and enforces a 16MB size limit.</div>
+  </div>
+  <div class="qa">
+    <div class="qa-q">Q: How do you prevent overfitting with limited data?</div>
+    <div class="qa-a">Five strategies: (1) Multi-source data fusion (PlantVillage + PlantDoc + TomatoLeaf), (2) aggressive augmentation (flip, rotate, zoom, brightness), (3) Dropout (0.5, 0.3), (4) EarlyStopping with patience, (5) transfer learning — the frozen ImageNet weights prevent the model from memorizing noise in our small dataset.</div>
+  </div>
+  <div class="qa">
+    <div class="qa-q">Q: Explain the inference pipeline end-to-end.</div>
+    <div class="qa-a">User uploads a leaf image via the web UI → JavaScript sends a multipart POST to Flask's <code>/predict</code> endpoint → image is saved to a temp file → PIL opens, converts to RGB, resizes to 224×224, normalizes to [0,1] → Stage 1 crop model predicts crop class → Stage 2 loads the crop-specific disease model and predicts disease → treatment data is looked up from <code>treatments.json</code> → JSON response with crop, disease, confidences, treatment info is returned → temp file is deleted in the finally block.</div>
+  </div>
+  <div class="qa">
+    <div class="qa-q">Q: What metrics would you use to evaluate this in production?</div>
+    <div class="qa-a">Beyond accuracy, I'd track: (1) Precision per class — critical to avoid false disease diagnoses that cause unnecessary pesticide use, (2) Recall — missing a real disease is costly, (3) F1 for balanced measure, (4) Latency — p50/p99 inference time, (5) Confidence calibration — is 90% confidence actually correct 90% of the time? (6) User feedback loop — tracking misclassifications reported by farmers.</div>
+  </div>
+  <div class="qa">
+    <div class="qa-q">Q: What is Categorical Cross-Entropy and why use it here?</div>
+    <div class="qa-a">CCE measures the divergence between the predicted probability distribution (softmax output) and the one-hot true label. It's the standard loss for multi-class single-label classification. Mathematically: L = −Σ y_true × log(y_pred). It penalizes confident wrong predictions more heavily than uncertain ones, providing smooth gradients for optimization.</div>
+  </div>
+  <div class="qa">
+    <div class="qa-q">Q: How would you deploy this to production at scale?</div>
+    <div class="qa-a">I'd containerize with Docker, convert models to TensorFlow Serving or TFLite, deploy behind an API gateway (e.g., AWS API Gateway + Lambda, or GCP Cloud Run). For high throughput, I'd use model batching, GPU inference servers, and a CDN for static assets. The lazy-loading singleton pattern already handles cold start efficiently.</div>
+  </div>
+</section>
+<hr class="divider"/>
+
+<!-- 11. INTERVIEW PITCHES -->
+<section class="section" id="pitch">
+  <div class="section-num">Section 11</div>
+  <h2>🎤 Explain Like I'm in an Interview</h2>
+
+  <div class="card" style="border-color:var(--yellow); border-width:2px;">
+    <div class="timer-badge">⏱️ 1 MINUTE PITCH</div>
+    <p>"I built <strong>PlantGuard AI</strong>, a web application that diagnoses plant diseases from leaf images using deep learning. It uses a <strong>two-stage CNN pipeline</strong>: Stage 1 identifies the crop (tomato, potato, or corn), and Stage 2 runs a crop-specific disease classifier. Both models use <strong>MobileNetV2 with transfer learning</strong> from ImageNet. I trained on three fused datasets — PlantVillage, PlantDoc, and TomatoLeaf — covering <strong>16 disease classes</strong>. The app is built with Flask and provides treatment recommendations alongside predictions. The two-stage design avoids cross-crop confusion and allows independent model updates per crop."</p>
+  </div>
+
+  <div class="card" style="border-color:var(--accent); border-width:2px;">
+    <div class="timer-badge">⏱️ 3 MINUTE EXPLANATION</div>
+    <p>"The problem I'm solving is <strong>real-time plant disease detection</strong> for farmers who lack access to agricultural experts. Plant diseases cause up to 40% crop losses globally.</p>
+    <p style="margin-top:10px;"><strong>Architecture:</strong> I designed a two-stage pipeline. Stage 1 is a 3-class crop classifier, Stage 2 is a set of crop-specific disease classifiers (10 classes for tomato, 3 for potato, 3 for corn). Both stages use <strong>MobileNetV2</strong> as the backbone — chosen for its lightweight architecture (3.4M params) and depthwise separable convolutions, making it ideal for deployment.</p>
+    <p style="margin-top:10px;"><strong>Training:</strong> I used a two-phase training strategy — first freezing the base and training only the classification head (10 epochs, LR=1e-4), then fine-tuning the top 30-40 layers with a 10× lower learning rate. I handled class imbalance with balanced class weights and used data augmentation including flips, rotation, zoom, and brightness shifts.</p>
+    <p style="margin-top:10px;"><strong>Data:</strong> I fused three datasets (PlantVillage, PlantDoc, TomatoLeaf) ~1.8GB total, with a data organization pipeline that normalizes 30+ inconsistent folder names into a unified structure. Images are cleaned, verified, resized to 224×224, and split 80/20.</p>
+    <p style="margin-top:10px;"><strong>Deployment:</strong> The Flask backend serves a polished web UI. The /predict endpoint accepts image uploads, runs the two-stage pipeline, and returns structured JSON with crop, disease, confidence scores, and treatment recommendations from a curated database. Temp files are cleaned post-inference."</p>
+  </div>
+
+  <div class="card" style="border-color:var(--green); border-width:2px;">
+    <div class="timer-badge">⏱️ DEEP TECHNICAL EXPLANATION</div>
+    <p><strong>Data Pipeline:</strong> <code>organize_datasets.py</code> merges PlantVillage (~54K images), PlantDoc (~2.5K real-world), and TomatoLeaf (~10K) into a unified <code>data/raw/{train,val}/{crop}/{disease}/</code> structure. A comprehensive <code>FOLDER_MAPPING</code> dictionary handles 30+ inconsistent folder names across sources. Images are verified with PIL, converted to RGB, resized to 224×224 with Lanczos resampling, and saved at 95% JPEG quality. The split is 80/20 with seed=42.</p>
+    <p style="margin-top:10px;"><strong>Model Architecture:</strong> MobileNetV2 backbone pretrained on ImageNet (1.4M images). The custom head is: GlobalAveragePooling2D → BatchNorm → Dense(512, ReLU) → Dropout(0.5) → Dense(256, ReLU) → Dropout(0.3) → Dense(num_classes, Softmax). The disease model has a deeper head (512→256) than the crop model (256 directly) because it has more nuanced classes to separate.</p>
+    <p style="margin-top:10px;"><strong>Training Strategy:</strong> Two-phase: (1) Frozen backbone, Adam optimizer at LR=1e-4, 10 epochs with EarlyStopping(patience=5). (2) Unfreeze top 30-40 layers, reduce LR to 1e-5 (prevents catastrophic forgetting), 20-25 epochs with EarlyStopping(patience=7-8), ModelCheckpoint(save_best_only), ReduceLROnPlateau(factor=0.3, patience=4). Class weights computed via sklearn's balanced mode. Mixed precision (FP16) enabled on GPU for ~2× throughput.</p>
+    <p style="margin-top:10px;"><strong>Inference:</strong> Lazy singleton pattern loads models on first request and caches in module-level globals. Input: PIL → RGB → resize 224×224 → normalize [0,1] → expand_dims → model.predict(verbose=0). The crop prediction is decoded via a class→index JSON mapping (inverted at runtime). The predicted crop routes to the corresponding disease model. Predictions below CONFIDENCE_THRESHOLD=0.60 raise a warning flag. Treatment metadata is looked up from <code>treatments.json</code> (468 lines, covering symptoms, treatment, prevention, severity for all diseases).</p>
+    <p style="margin-top:10px;"><strong>Application Layer:</strong> Flask with factory pattern (<code>create_app</code>), AppConfig dataclass loaded from env vars (12-factor), CORS enabled, structured error responses with error codes. Temp files via <code>tempfile.mkstemp()</code> deleted in finally block. Health endpoint reports startup readiness, missing files, and TF compatibility warnings. Test suite uses pytest with mocked prediction module (no TF dependency in tests).</p>
+  </div>
+</section>
+<hr class="divider"/>
+</div>
+
+<footer class="footer">
+  <p>PlantGuard AI — Interview Preparation Guide</p>
+  <p>Generated from project source code analysis. Good luck with your interview! 🚀</p>
+</footer>
+
+</body>
+</html>

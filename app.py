@@ -318,7 +318,8 @@ def create_app(config: AppConfig | None = None) -> Flask:
             os.close(fd)
             file.save(temp_path)
 
-            result = get_prediction_module().full_pipeline(temp_path)
+            use_tta = request.args.get("tta", "false").lower() == "true"
+            result = get_prediction_module().full_pipeline(temp_path, use_tta=use_tta)
             return jsonify(result)
         except get_prediction_module().PredictionError as exc:
             LOGGER.warning("Prediction request failed: %s", exc)

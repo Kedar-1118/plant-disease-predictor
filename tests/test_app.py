@@ -33,7 +33,7 @@ def client():
     def startup_check():
         return startup_status
 
-    def full_pipeline(_image_path):
+    def full_pipeline(_image_path, use_tta=False):
         return {
             "success": True,
             "crop": "tomato",

@@ -722,6 +722,95 @@ body {
 
 .footer-note { font-size: 11px; margin-top: 4px; opacity: 0.6; }
 
+/* ── Grad-CAM Section ──────────────────────────────────────────── */
+.gradcam-section {
+  margin-bottom: 24px;
+  padding: 24px;
+  background: rgba(251, 191, 36, 0.04);
+  border: 1px solid rgba(251, 191, 36, 0.15);
+  border-radius: var(--radius-md);
+  animation: slide-up 0.3s ease-out;
+}
+
+.gradcam-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.gradcam-badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  background: linear-gradient(135deg, rgba(251, 191, 36, 0.15), rgba(239, 68, 68, 0.15));
+  color: var(--amber-400);
+  border: 1px solid rgba(251, 191, 36, 0.25);
+}
+
+.gradcam-description {
+  font-size: 13px;
+  color: var(--text-muted);
+  line-height: 1.65;
+  margin-bottom: 16px;
+}
+
+.gradcam-images {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  justify-content: center;
+}
+
+.gradcam-image-card {
+  flex: 1;
+  max-width: 280px;
+  text-align: center;
+}
+
+.gradcam-label {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+}
+
+.gradcam-img {
+  width: 100%;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.gradcam-arrow {
+  font-size: 24px;
+  color: var(--amber-400);
+  flex-shrink: 0;
+}
+
+.latency-display {
+  margin-top: 16px;
+  font-size: 13px;
+  color: var(--text-muted);
+  text-align: center;
+  padding: 8px 0;
+  border-top: 1px solid var(--border);
+}
+
+.latency-display strong {
+  color: var(--green-400);
+  font-variant-numeric: tabular-nums;
+}
+
 /* ── Responsive ─────────────────────────────────────────────────── */
 @media (max-width: 600px) {
   .hero { padding: 40px 16px 32px; }

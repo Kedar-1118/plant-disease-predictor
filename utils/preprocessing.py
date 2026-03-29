@@ -78,8 +78,28 @@ def setup_gpu(enable_mixed_precision: bool = False):
         LOGGER.info("No GPU detected. Running on CPU.")
 
 
+MAX_PIXELS = 4096 * 4096  # ~16 megapixels
+
+
 def load_and_preprocess_image(image_path: str) -> np.ndarray:
-    img = Image.open(image_path).convert("RGB")
+    """
+    Load an image, validate its dimensions, convert to RGB,
+    resize to (224, 224), and normalize to [0, 1].
+
+    Raises:
+        ValueError: If the image exceeds MAX_PIXELS resolution.
+    """
+    img = Image.open(image_path)
+
+    # Validate image resolution to prevent memory exhaustion
+    width, height = img.size
+    if width * height > MAX_PIXELS:
+        raise ValueError(
+            f"Image resolution too high ({width}x{height} = {width*height:,} pixels). "
+            f"Maximum allowed: {MAX_PIXELS:,} pixels."
+        )
+
+    img = img.convert("RGB")
     img = img.resize(IMG_SIZE)
     img_array = np.array(img, dtype=np.float32) / 255.0
     img_array = np.expand_dims(img_array, axis=0)

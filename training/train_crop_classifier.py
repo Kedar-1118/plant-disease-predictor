@@ -306,6 +306,32 @@ def main():
 
     plot_training_history(history1,history2)
 
+    # ── Save metadata ─────────────────────────────────────────────────────
+    from save_metadata import save_model_metadata
+    total_epochs = len(history1.history["accuracy"]) + len(history2.history["accuracy"])
+    save_model_metadata(
+        model_path=MODEL_SAVE,
+        val_accuracy=val_acc,
+        val_loss=val_loss,
+        epochs_run=total_epochs,
+        num_classes=num_classes,
+        class_names=list(train_gen.class_indices.keys()),
+        hyperparameters={
+            "learning_rate": LEARNING_RATE,
+            "finetune_lr": FINETUNE_LR,
+            "batch_size": BATCH_SIZE,
+            "epochs_frozen": EPOCHS_FROZEN,
+            "epochs_finetune": EPOCHS_FINETUNE,
+            "unfrozen_layers": 30,
+        },
+        dataset_info={
+            "train_samples": train_gen.samples,
+            "val_samples": val_gen.samples,
+            "train_dir": TRAIN_DIR,
+            "val_dir": VAL_DIR,
+        },
+    )
+
     print("\nTraining complete.")
 
 

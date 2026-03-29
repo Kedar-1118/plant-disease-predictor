@@ -4,11 +4,15 @@ from __future__ import annotations
 
 import argparse
 import json
+import logging
 import os
 import sys
+import time
 from pathlib import Path
 
 import numpy as np
+
+LOGGER = logging.getLogger(__name__)
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
@@ -153,10 +157,36 @@ def _load_disease_model(crop: str):
     return _disease_models[crop], _disease_classes[crop]
 
 
-def predict_crop(image_path: str) -> dict:
+def predict_with_tta(
+    model: "tf.keras.Model",
+    img_array: np.ndarray,
+    n_augments: int = 5,
+) -> np.ndarray:
+    """
+    Test-Time Augmentation: predict on multiple augmented versions of the
+    image and average the results for more robust predictions.
+    """
+    import tensorflow as tf
+
+    predictions = [model.predict(img_array, verbose=0)[0]]
+
+    for _ in range(n_augments):
+        aug = tf.image.random_flip_left_right(img_array)
+        aug = tf.image.random_brightness(aug, max_delta=0.1)
+        predictions.append(model.predict(aug.numpy(), verbose=0)[0])
+
+    return np.mean(predictions, axis=0)
+
+
+def predict_crop(image_path: str, use_tta: bool = False) -> dict:
     model, class_indices = _load_crop_model()
     img_array = load_and_preprocess_image(image_path)
-    predictions = model.predict(img_array, verbose=0)[0]
+
+    if use_tta:
+        predictions = predict_with_tta(model, img_array)
+    else:
+        predictions = model.predict(img_array, verbose=0)[0]
+
     index_to_class = {v: k for k, v in class_indices.items()}
 
     predicted_index = int(np.argmax(predictions))
@@ -172,13 +202,21 @@ def predict_crop(image_path: str) -> dict:
         "crop": predicted_crop,
         "confidence": confidence,
         "all_predictions": all_predictions,
+        "_model": model,
+        "_img_array": img_array,
+        "_predicted_index": predicted_index,
     }
 
 
-def predict_disease(crop: str, image_path: str) -> dict:
+def predict_disease(crop: str, image_path: str, use_tta: bool = False) -> dict:
     model, class_indices = _load_disease_model(crop)
     img_array = load_and_preprocess_image(image_path)
-    predictions = model.predict(img_array, verbose=0)[0]
+
+    if use_tta:
+        predictions = predict_with_tta(model, img_array)
+    else:
+        predictions = model.predict(img_array, verbose=0)[0]
+
     index_to_class = {v: k for k, v in class_indices.items()}
 
     predicted_index = int(np.argmax(predictions))
@@ -194,6 +232,9 @@ def predict_disease(crop: str, image_path: str) -> dict:
         "disease": predicted_disease,
         "confidence": confidence,
         "all_predictions": all_predictions,
+        "_model": model,
+        "_img_array": img_array,
+        "_predicted_index": predicted_index,
     }
 
 
@@ -218,11 +259,23 @@ def get_treatment(crop: str, disease: str) -> dict:
     return treatment_data
 
 
-def full_pipeline(image_path: str) -> dict:
+def full_pipeline(image_path: str, use_tta: bool = False) -> dict:
+    """
+    Full two-stage prediction with optional TTA and Grad-CAM explainability.
+
+    Args:
+        image_path: Path to the leaf image.
+        use_tta:    Enable Test-Time Augmentation (slower but more robust).
+
+    Returns:
+        Dict with crop, disease, confidences, treatment, gradcam_image, and latency_ms.
+    """
     if not os.path.exists(image_path):
         raise InvalidImageError(f"Image not found: {image_path}")
 
-    crop_result = predict_crop(image_path)
+    pipeline_start = time.perf_counter()
+
+    crop_result = predict_crop(image_path, use_tta=use_tta)
     result = {
         "success": True,
         "crop": crop_result["crop"],
@@ -240,7 +293,7 @@ def full_pipeline(image_path: str) -> dict:
             "The image may not be a clear leaf photo."
         )
 
-    disease_result = predict_disease(crop_result["crop"], image_path)
+    disease_result = predict_disease(crop_result["crop"], image_path, use_tta=use_tta)
     result["disease"] = disease_result["disease"]
     result["disease_confidence"] = round(disease_result["confidence"] * 100, 2)
     result["disease_all_predictions"] = {
@@ -248,6 +301,33 @@ def full_pipeline(image_path: str) -> dict:
         for key, value in disease_result["all_predictions"].items()
     }
     result["treatment"] = get_treatment(crop_result["crop"], disease_result["disease"])
+
+    # ── Grad-CAM Explainability ───────────────────────────────────────────
+    try:
+        from utils.gradcam import generate_gradcam_overlay_b64
+
+        gradcam_b64 = generate_gradcam_overlay_b64(
+            model=disease_result["_model"],
+            img_array=disease_result["_img_array"],
+            original_image_path=image_path,
+            pred_index=disease_result["_predicted_index"],
+        )
+        result["gradcam_image"] = gradcam_b64
+    except Exception as exc:
+        LOGGER.warning("Grad-CAM generation failed: %s", exc)
+        result["gradcam_image"] = None
+
+    # ── Latency ───────────────────────────────────────────────────────────
+    latency_ms = round((time.perf_counter() - pipeline_start) * 1000, 1)
+    result["latency_ms"] = latency_ms
+    LOGGER.info(
+        "Prediction complete in %.1fms | crop=%s (%.1f%%) | disease=%s (%.1f%%)",
+        latency_ms,
+        result["crop"],
+        result["crop_confidence"],
+        result["disease"],
+        result["disease_confidence"],
+    )
 
     return result
 

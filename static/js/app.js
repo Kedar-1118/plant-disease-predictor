@@ -252,6 +252,30 @@ function renderResult(data) {
     renderList(treatmentList, treatment.treatment || []);
     renderList(preventionList, treatment.prevention || []);
     renderConfidenceBreakdown(data);
+
+    // ── Grad-CAM Heatmap ──────────────────────────────────────────────
+    const gradcamSection = document.getElementById("gradcamSection");
+    const gradcamOriginal = document.getElementById("gradcamOriginal");
+    const gradcamOverlay = document.getElementById("gradcamOverlay");
+
+    if (data.gradcam_image) {
+        gradcamOriginal.src = previewImage.src;
+        gradcamOverlay.src = data.gradcam_image;
+        gradcamSection.style.display = "block";
+    } else {
+        gradcamSection.style.display = "none";
+    }
+
+    // ── Inference Latency ─────────────────────────────────────────────
+    const latencyDisplay = document.getElementById("latencyDisplay");
+    const latencyValue = document.getElementById("latencyValue");
+
+    if (data.latency_ms) {
+        latencyValue.textContent = data.latency_ms;
+        latencyDisplay.style.display = "block";
+    } else {
+        latencyDisplay.style.display = "none";
+    }
 }
 
 function renderList(listEl, items) {

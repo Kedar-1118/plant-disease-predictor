@@ -36,9 +36,11 @@ PROJECT_DIR = BASE_DIR.parent
 OUTPUT_DIR = BASE_DIR / "raw"
 TRAIN_DIR = OUTPUT_DIR / "train"
 VAL_DIR = OUTPUT_DIR / "val"
+TEST_DIR = OUTPUT_DIR / "test"
 
 IMG_SIZE = (224, 224)
-VAL_SPLIT = 0.20
+VAL_SPLIT = 0.15
+TEST_SPLIT = 0.15
 SEED = 42
 
 random.seed(SEED)
@@ -161,13 +163,17 @@ def organize():
 
     train_images = defaultdict(list)
     val_images = defaultdict(list)
+    test_images = defaultdict(list)
 
-    # PlantVillage split
+    # PlantVillage split (70/15/15)
     for key, imgs in plantvillage.items():
         random.shuffle(imgs)
-        split = int(len(imgs)*(1-VAL_SPLIT))
-        train_images[key] += imgs[:split]
-        val_images[key] += imgs[split:]
+        n = len(imgs)
+        n_val = int(n * VAL_SPLIT)
+        n_test = int(n * TEST_SPLIT)
+        val_images[key] += imgs[:n_val]
+        test_images[key] += imgs[n_val:n_val + n_test]
+        train_images[key] += imgs[n_val + n_test:]
 
     # PlantDoc
     for k,v in plantdoc_train.items():
@@ -186,18 +192,20 @@ def organize():
 
     print("Creating directories...")
 
-    all_keys=set(list(train_images.keys())+list(val_images.keys()))
+    all_keys=set(list(train_images.keys())+list(val_images.keys())+list(test_images.keys()))
 
     for crop,disease in all_keys:
         (TRAIN_DIR/crop/disease).mkdir(parents=True,exist_ok=True)
         (VAL_DIR/crop/disease).mkdir(parents=True,exist_ok=True)
+        (TEST_DIR/crop/disease).mkdir(parents=True,exist_ok=True)
 
 
     print("Processing images...")
 
     for split_name,split_images,split_dir in [
         ("train",train_images,TRAIN_DIR),
-        ("val",val_images,VAL_DIR)
+        ("val",val_images,VAL_DIR),
+        ("test",test_images,TEST_DIR)
     ]:
 
         print(f"Processing {split_name}")

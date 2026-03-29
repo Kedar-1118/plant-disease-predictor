@@ -175,6 +175,33 @@
           <img id="resultImage" class="result-image" alt="Analyzed leaf" />
         </div>
 
+        <!-- Grad-CAM Explainability Section -->
+        <div class="gradcam-section" id="gradcamSection" style="display:none;">
+          <div class="gradcam-header">
+            <h3 class="info-title">🔍 Model Explainability (Grad-CAM)</h3>
+            <span class="gradcam-badge">AI Heatmap</span>
+          </div>
+          <p class="gradcam-description">
+            The heatmap highlights which regions of the leaf the model focused on to make
+            its prediction. <strong>Warm colors (red/yellow)</strong> indicate high-attention
+            areas; <strong>cool colors (blue)</strong> indicate low attention.
+          </p>
+          <div class="gradcam-images">
+            <div class="gradcam-image-card">
+              <span class="gradcam-label">Original</span>
+              <img id="gradcamOriginal" class="gradcam-img" alt="Original leaf" />
+            </div>
+            <div class="gradcam-arrow">→</div>
+            <div class="gradcam-image-card">
+              <span class="gradcam-label">Grad-CAM Overlay</span>
+              <img id="gradcamOverlay" class="gradcam-img" alt="Grad-CAM heatmap" />
+            </div>
+          </div>
+          <div class="latency-display" id="latencyDisplay" style="display:none;">
+            ⚡ Inference time: <strong id="latencyValue">-</strong> ms
+          </div>
+        </div>
+
         <div class="info-section">
           <h3 class="info-title">About This Disease</h3>
           <p class="info-text" id="diseaseDescription">-</p>

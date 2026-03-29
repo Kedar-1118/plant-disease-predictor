@@ -1,0 +1,41 @@
+# Data (too large for Docker image — mount as volume if needed)
+data/plantdisease/
+data/plantdisease.zip
+data/plant-doc-dataset/
+data/plant-doc-dataset.zip
+data/tomatoleaf/
+data/tomatoleaf.zip
+data/raw/
+
+# Python caches
+__pycache__/
+*.pyc
+*.pyo
+
+# Git
+.git/
+.gitignore
+
+# Tests
+tests/
+.tmp_pytest/
+pytest-cache-files-*/
+tests_runtime_uploads*/
+unused_upload_dir/
+
+# IDE
+.vscode/
+.idea/
+
+# Virtual environments
+venv/
+env/
+.env
+
+# OS files
+*.DS_Store
+Thumbs.db
+
+# Documentation
+*.md
+interview.html
